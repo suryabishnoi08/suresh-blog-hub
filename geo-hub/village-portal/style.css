@@ -1,21 +1,15 @@
-/* --- Village Portal Specific Styling (Modular CSS) --- */
+/* --- Village Portal Premium Design --- */
 
-:root {
-  --portal-accent: #0066ff;
-  --portal-bg: #f9fbff;
-}
+/* Dynamic Stats Card Grid */
+.v-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin: 35px 0; }
+.v-stat-box { background: #fdfdfd; border: 1px solid #f1f5f9; padding: 25px; border-radius: 12px; text-align: center; transition: 0.4s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.v-stat-box:hover { border-color: #2563eb; transform: scale(1.05); background: #fff; }
+.v-num { display: block; font-size: 24px; font-weight: 900; color: #2563eb; margin-bottom: 8px; }
+.v-lbl { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; }
 
-/* Stats Grid - One Line One Class */
-.v-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 30px 0; }
-.v-stat-box { background: var(--portal-bg); border: 1.5px solid #eef2f7; padding: 20px; border-radius: 10px; text-align: center; transition: 0.3s; }
-.v-stat-box:hover { border-color: var(--portal-accent); transform: translateY(-3px); }
-.v-num { display: block; font-size: 22px; font-weight: 800; color: var(--portal-accent); margin-bottom: 5px; }
-.v-lbl { font-size: 11px; font-weight: 700; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; }
+/* Professional Typography inside Post */
+.v-portal-content h2 { font-size: 26px; font-weight: 800; color: #0f172a; margin: 45px 0 20px 0; display: flex; align-items: center; gap: 15px; }
+.v-portal-content h2::before { content: ''; width: 6px; height: 30px; background: #2563eb; border-radius: 10px; }
 
-/* Culture Quote Section */
-.v-culture-quote { background: #fff; border-left: 4px solid var(--portal-accent); padding: 20px; margin: 30px 0; font-style: italic; font-size: 17px; color: #34495e; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-
-/* Responsive Image Logic */
-.v-img-wrap { margin: 30px 0; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-.v-img-wrap img { width: 100%; height: auto; display: block; transition: 0.5s; }
-.v-img-cap { display: block; text-align: center; padding: 12px; font-size: 13px; color: #95a5a6; background: #fff; }
+/* Culture Quote Style */
+.v-culture-quote { background: #f8fafc; border-left: 5px solid #2563eb; padding: 30px; border-radius: 0 15px 15px 0; font-style: italic; font-size: 19px; color: #475569; line-height: 1.6; margin: 40px 0; position: relative; }
