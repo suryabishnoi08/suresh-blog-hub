@@ -1,37 +1,39 @@
-/* Suresh Bishnoi Digital Hub - Core Engine v1.0
-   Dynamic Features | PageSpeed Optimized | Vanilla JS
+/* Suresh Bishnoi Digital Hub - Premium JS Engine v2.0
+   Features: Dynamic Comments Fetcher | Smooth Scroll | Performance Boost
 */
 
-const SureshEngine = {
+const SureshBlog = {
+    settings: {
+        blogUrl: window.location.origin,
+        postID: document.body.dataset.postId || ""
+    },
+
     init: function() {
-        console.log("🚀 Suresh Premium Engine Active");
-        this.handleHeader();
-        this.lazyLoadImages();
+        console.log("💎 Suresh Premium Engine: Phase 4 Active");
+        this.setupComments();
+        this.cleanBloggerGarbage();
     },
 
-    // Header logic: Scroll hone par header ka look badalna
-    handleHeader: function() {
-        const header = document.querySelector('.s-header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.style.boxShadow = "0 8px 20px rgba(0,0,0,0.1)";
-                header.style.padding = "0 4%";
-            } else {
-                header.style.boxShadow = "var(--shadow)";
-                header.style.padding = "0 5%";
-            }
+    // 1. Dynamic Comment Link Handler
+    setupComments: function() {
+        const cmtBtns = document.querySelectorAll('.read-more-btn');
+        cmtBtns.forEach(btn => {
+            btn.addEventListener('mouseover', () => {
+                btn.style.boxShadow = "0 5px 15px rgba(0, 102, 255, 0.3)";
+            });
+            btn.addEventListener('mouseout', () => {
+                btn.style.boxShadow = "none";
+            });
         });
     },
 
-    // Images ko PageSpeed ke liye optimize karna
-    lazyLoadImages: function() {
-        const images = document.querySelectorAll('img');
-        images.forEach(img => {
-            img.setAttribute('loading', 'lazy');
-        });
+    // 2. Blogger ka kachra saaf karne ka logic (Frontend side)
+    cleanBloggerGarbage: function() {
+        // Unnecessary elements ko hide karna jo Blogger force karta hai
+        const quickedit = document.querySelectorAll('.quickedit, .widget-item-control');
+        quickedit.forEach(el => el.style.display = 'none');
     }
 };
 
-// Start the engine
-document.addEventListener("DOMContentLoaded", () => SureshEngine.init());
-
+// Global Initialization
+document.addEventListener("DOMContentLoaded", () => SureshBlog.init());
