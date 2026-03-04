@@ -1,29 +1,26 @@
 /* --- SURESH BISHNOI DIGITAL HUB - DYNAMIC ENGINE v6.0 --- */
 
 const SureshComments = {
-    init: function() {
-        // Check karna ki hum post page par hain ya nahi
+        init: function() {
+        console.log("🚀 Premium Engine Checked");
         const commentRoot = document.getElementById('s-comments-root');
-        if(!commentRoot) return; 
+        if(!commentRoot) {
+            console.log("Comment root nahi mila");
+            return; 
+        }
 
-        // Article ID se Post ID nikalna
-        const article = document.querySelector('article.s-post-card');
-        if(!article) return;
+        // Article ID se Post ID nikalna (Blogger default post ID logic)
+        const postId = document.body.dataset.postId || document.querySelector("meta[itemprop='postId']")?.content;
         
-        const postId = article.id.split('-')[1];
+        if(!postId) {
+            console.log("Post ID nahi mili");
+            return;
+        }
         
         // Comments fetch karna shuru karein
         this.fetchComments(postId, commentRoot);
     },
 
-    fetchComments: function(postId, root) {
-        root.innerHTML = '<div class="s-no-comments">⏳ Premium Comments Load ho rahe hain...</div>';
-        
-        // Blogger JSON API Call (Without slowing down PageSpeed)
-        const script = document.createElement('script');
-        script.src = `/feeds/${postId}/comments/default?alt=json-in-script&callback=SureshComments.render`;
-        document.body.appendChild(script);
-    },
 
     render: function(data) {
         const root = document.getElementById('s-comments-root');
