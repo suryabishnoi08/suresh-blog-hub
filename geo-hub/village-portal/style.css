@@ -3,38 +3,49 @@
    Optimization: 100/100 PageSpeed | Zero Inline CSS
    ========================================================== */
 
-/* 1. Master Container */
-.v-wrapper { max-width: 900px; margin: 20px auto; padding: 0 15px; font-family: 'Segoe UI', Roboto, sans-serif; color: #2d3436; line-height: 1.6; }
-
-/* 2. Premium Hero Section (Village Name & Badge) */
-.v-hero { background: linear-gradient(135deg, #1e5128, #4e944f); color: #ffffff; padding: 40px 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(30, 81, 40, 0.2); margin-bottom: 30px; position: relative; overflow: hidden; }
-.v-hero-title { font-size: 2.5rem; font-weight: 900; margin: 0; letter-spacing: -1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-.v-tagline { font-size: 1.1rem; opacity: 0.9; margin-top: 8px; font-weight: 500; }
-
-/* 3. Live Status Badge (Dynamic Pulse) */
-.v-live-box { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 50px; margin-top: 15px; font-size: 13px; font-weight: 700; backdrop-filter: blur(5px); }
-.v-pulse-dot { width: 8px; height: 8px; background: #ff4757; border-radius: 50%; margin-right: 8px; animation: v-blink 1.2s infinite; }
-@keyframes v-blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-/* 4. Information Grid (Stats Card) */
-.v-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 30px; }
-.v-stat-card { background: #ffffff; padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #f1f2f6; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s ease; }
-.v-stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #4e944f; }
-.v-stat-label { font-size: 11px; text-transform: uppercase; color: #a4b0be; font-weight: 700; letter-spacing: 1px; display: block; }
-.v-stat-value { font-size: 18px; font-weight: 800; color: #1e5128; margin-top: 5px; display: block; }
-
-/* 5. Wiki Table Section (Detailed Info) */
-.v-wiki-table { width: 100%; background: #ffffff; border-radius: 15px; overflow: hidden; border: 1px solid #f1f2f6; margin-top: 20px; }
-.v-table-row { display: flex; border-bottom: 1px solid #f8f9fa; padding: 15px 20px; align-items: center; }
-.v-table-row:last-child { border-bottom: none; }
-.v-label { width: 40%; font-weight: 700; color: #747d8c; font-size: 14px; }
-.v-value { width: 60%; font-weight: 600; color: #2f3542; font-size: 15px; }
-
-/* 6. Responsive Adjustments */
-@media (max-width: 600px) {
-    .v-hero-title { font-size: 1.8rem; }
-    .v-grid { grid-template-columns: 1fr 1fr; }
-    .v-label { width: 50%; }
-    .v-value { width: 50%; }
-}
+:root { --royal-blue:#1e3a8a; --vibrant-orange:#d97706; --deep-red:#991b1b; --soft-bg:#f8fafc; --text-dark:#0f172a; --text-gray:#334155; --border-color:#cbd5e1; --white:#ffffff; }
+.premium-blog-wrapper, .premium-blog-wrapper * { box-sizing:border-box !important; }
+.premium-blog-wrapper { font-family:'Segoe UI', Roboto, sans-serif; color:var(--text-dark); line-height:1.8; background:var(--white); padding:15px 18px; max-width:900px; margin:0 auto; contain:content; }
+.post-flex-layout { display:flex; flex-direction:column; gap:25px; margin-bottom:5px; }
+.wiki-infobox-pro { width:100%; border:2px solid var(--royal-blue); background-color:var(--soft-bg); border-radius:12px; overflow:hidden; box-shadow:0 8px 20px rgba(30,58,138,0.08); }
+.infobox-main-title { background:linear-gradient(135deg, var(--royal-blue), #3b82f6); color:var(--white); text-align:center; padding:15px; font-size:20px; font-weight:bold; border-bottom:2px solid var(--vibrant-orange); }
+.infobox-sub { display:block; font-size:14px; font-weight:normal; color:#e2e8f0; margin-top:5px; }
+.img-center { text-align:center; background:var(--white); border-bottom:3px solid var(--vibrant-orange); padding:0 !important; }
+.infobox-img { max-width:100%; width:100%; height:auto; display:block; margin:0 auto; }
+.wiki-infobox-pro table { width:100% !important; border-collapse:collapse !important; table-layout:fixed !important; }
+.infobox-header-row { background-color:#e0e7ff; color:var(--royal-blue); text-align:center; font-weight:bold; font-size:16px; padding:12px; border-top:1px solid var(--border-color); }
+.wiki-infobox-pro td { border-bottom:1px dashed var(--border-color); padding:10px 15px; font-size:14.5px; text-align:center; word-break:break-word; }
+.wiki-infobox-pro td:first-child { border-right:1px solid var(--border-color); width:40% !important; font-weight:700; }
+.wiki-infobox-pro td:last-child { width:60% !important; font-weight:700; }
+.intro-highlight { color:var(--deep-red); font-size:19px; font-weight:bold; margin-bottom:15px; }
+.colorful-alert-box { background:#eff6ff; border-left:6px solid var(--royal-blue); padding:18px 20px; border-radius:0 8px 8px 0; margin:20px 0; font-size:16px; font-weight:500; }
+.pro-section-title { position:relative; font-size:24px; color:var(--royal-blue); padding-bottom:10px; margin:40px 0 20px 0; font-weight:bold; border-bottom:2px solid var(--border-color); }
+.pro-section-title::after { content:''; position:absolute; left:0; bottom:-2px; width:80px; height:4px; background:var(--vibrant-orange); border-radius:2px; }
+.magra-weather-pro { background:#ffffff; border-top:6px solid #f59e0b; border-radius:20px; padding:25px; margin:30px 0; box-shadow:0 10px 30px rgba(0,0,0,0.04); position:relative; }
+.w-head-pro { border-bottom:1px dashed #cbd5e1; text-align:center; padding-bottom:12px; font-size:16px; font-weight:800; color:#475569; text-transform:uppercase; }
+.w-main-pro { display:flex; justify-content:space-around; align-items:center; padding:25px 0; }
+.w-temp-pro { font-size:55px; font-weight:900; color:#0f172a; letter-spacing:-2px; }
+.w-desc-pro { font-size:16px; font-weight:700; color:#991b1b; background:#fffbeb; padding:8px 18px; border-radius:30px; border:1px solid #fde68a; }
+.w-grid-pro { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin-top:10px; }
+.w-cell-pro { background:#f8fafc; padding:15px; border-radius:12px; text-align:center; border:1px solid #f1f5f9; }
+.w-cell-pro span { display:block; font-size:13px; color:#475569; font-weight:600; margin-bottom:5px; }
+.w-cell-pro b { display:block; font-size:18px; color:#1e293b; font-weight:800; }
+.live-badge { display:inline-flex; align-items:center; gap:6px; background:#fee2e2; color:#991b1b; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:800; }
+.live-dot { width:8px; height:8px; background-color:#ef4444; border-radius:50%; animation:pulse-live 1.5s infinite; }
+@keyframes pulse-live { 0% { box-shadow:0 0 0 0 rgba(239, 68, 68, 0.6); } 70% { box-shadow:0 0 0 8px rgba(239, 68, 68, 0); } 100% { box-shadow:0 0 0 0 rgba(239, 68, 68, 0); } }
+.table-responsive { overflow-x:auto; margin:25px 0; border-radius:10px; }
+.premium-data-table { border-collapse:collapse; width:100%; background:var(--white); text-align:center; }
+.premium-data-table th { background-color:var(--royal-blue); color:var(--white); padding:15px; font-size:16px; }
+.premium-data-table td { padding:15px; border-bottom:1px solid var(--border-color); color:var(--text-dark); }
+.color-list { padding-left:20px; margin-bottom:25px; list-style:none; }
+.color-list li { margin-bottom:15px; position:relative; padding-left:25px; color:var(--text-gray); }
+.color-list li::before { content:"\1F538"; position:absolute; left:0; top:0; }
+.connectivity-box { background-color:#fcfcfc; border-left:4px solid #ff5722; padding:18px 25px; margin:25px 0; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.08); }
+.map-responsive-pro { position:relative; padding-bottom:60%; height:0; overflow:hidden; border-radius:10px; }
+.map-responsive-pro iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+.faq-container-pro { margin:30px 0; border:1px solid var(--border-color); border-radius:12px; overflow:hidden; }
+.faq-main-header { background:#cfede2; color:#7C3935; padding:18px; font-size:20px; font-weight:bold; text-align:center; }
+.faq-question-btn { width:100%; text-align:left; background:transparent; border:none; padding:22px 20px; font-size:16px; font-weight:bold; color:var(--royal-blue); cursor:pointer; display:flex; justify-content:space-between; }
+.faq-answer-panel { max-height:0; overflow:hidden; transition:max-height 0.4s ease; background:#fafafa; }
+@media (min-width:768px) { .post-flex-layout { flex-direction:row; } .wiki-infobox-pro { width:320px; } .w-grid-pro { grid-template-columns:repeat(4, 1fr); } }
 
