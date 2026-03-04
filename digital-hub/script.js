@@ -1,311 +1,459 @@
-/* * 🚀 SURESH BRAND SMART JS (PART 5/6)
- * Includes: Dark Mode, Progress Bar, Sticky Header, Drawer Toggle
- */
+  <script type='text/javascript'>
+    //<![CDATA[
+    document.addEventListener('DOMContentLoaded', () => {
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. --- DARK MODE LOGIC (Local Storage based) ---
-    const darkModeBtn = document.getElementById(
-        'suresh-dark-mode-toggle');
-    const body = document.body;
-    
-    // Check if user previously set dark mode
-    if (localStorage.getItem('suresh-theme') === 'dark-mode') {
-        body.classList.add('dark-mode');
-        darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
-    }
-    
-    darkModeBtn.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        
-        if (body.classList.contains('dark-mode')) {
-            localStorage.setItem('suresh-theme', 'dark-mode');
-            darkModeBtn.innerHTML =
-            '<i class="fas fa-sun"></i>';
-            showToast('suresh-copy-toast',
-                '🌙 Dark Mode Activated!');
+      /* --- 1. REAL TIME SERVER COUNTER & TIME --- */
+      const updateTime = () => {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); 
+        const updateTag = document.getElementById('update-time');
+        if (updateTag) updateTag.innerHTML = `${dateStr}, ${timeStr}`;
+      };
+      updateTime();
+
+      const counterTag = document.getElementById("live-visitor-count");
+      if (counterTag) {
+        fetch("https://api.counterapi.dev/v1/suresh-jani-bishnoi/main-site/up")
+          .then(res => res.json())
+          .then(data => counterTag.innerText = data.count)
+          .catch(err => {
+            console.error("Counter Error:", err);
+            counterTag.innerText = "1000+";
+          });
+      }
+
+      /* --- 2. ANTI-COPY PROTECTION --- */
+      let copyCount = 0; 
+      document.addEventListener('copy', (e) => {
+        copyCount++;
+        if (copyCount === 1) {
+          e.preventDefault();
+          showCopyWarning();
         } else {
-            localStorage.setItem('suresh-theme', 'light-mode');
-            darkModeBtn.innerHTML =
-                '<i class="fas fa-moon"></i>';
-            showToast('suresh-copy-toast',
-                '☀️ Light Mode Activated!');
+          copyCount = 0;
         }
-    });
-    
-    // 2. --- READING PROGRESS BAR & STICKY HEADER ---
-    const progressBar = document.getElementById('suresh-progress-bar');
-    const header = document.querySelector('.suresh-header');
-    let lastScroll = 0;
-    
-    window.addEventListener('scroll', () => {
-        // Progress Bar Calculation
-        const winScroll = document.body.scrollTop || document
-            .documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight -
-            document.documentElement.clientHeight;
-        const scrolled = (winScroll / height) * 100;
-        progressBar.style.width = scrolled + "%";
-        
-        // Sticky Header Hide/Show on Scroll
-        const currentScroll = window.pageYOffset;
-        if (currentScroll <= 0) {
-            header.classList.remove('scroll-up');
-            return;
-        }
-        
-        if (currentScroll > lastScroll && !header.classList
-            .contains('scroll-down')) {
-            header.classList.remove('scroll-up');
-            header.classList.add('scroll-down');
-        } else if (currentScroll < lastScroll && header
-            .classList.contains('scroll-down')) {
-            header.classList.remove('scroll-down');
-            header.classList.add('scroll-up');
-        }
-        lastScroll = currentScroll;
-        
-        // Back to Top Button Visibility
-        const bttBtn = document.getElementById('suresh-btt');
-        if (winScroll > 500) {
-            bttBtn.classList.add('show');
-        } else {
-            bttBtn.classList.remove('show');
-        }
-    });
-    
-    // 3. --- BACK TO TOP CLICK ---
-    document.getElementById('suresh-btt').addEventListener('click',
-    () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    
-    // 4. --- DRAWER MENU TOGGLE (Mobile & Desktop Sidebar) ---
-    const menuOpen = document.getElementById('suresh-menu-open');
-    const menuClose = document.getElementById('suresh-menu-close');
-    const drawer = document.getElementById('suresh-drawer');
-    const overlay = document.getElementById('suresh-overlay');
-    
-    const toggleDrawer = (action) => {
-        if (action === 'open') {
-            drawer.classList.add('active');
-            overlay.classList.add('active');
-            body.style.overflow =
-            'hidden'; // Stop background scroll
-        } else {
-            drawer.classList.remove('active');
-            overlay.classList.remove('active');
-            body.style.overflow = 'auto';
-        }
-    };
-    
-    menuOpen.addEventListener('click', () => toggleDrawer('open'));
-    menuClose.addEventListener('click', () => toggleDrawer('close'));
-    overlay.addEventListener('click', () => toggleDrawer('close'));
-    
-    // 5. --- GLOBAL TOAST FUNCTION ---
-    function showToast(id, message) {
-        const toast = document.createElement('div');
-        toast.id = id;
-        toast.className = 'show';
-        toast.innerHTML = message;
-        document.body.appendChild(toast);
-        
+      });
+
+      const showCopyWarning = () => {
+        let existing = document.getElementById('copy-warning-toast');
+        if (existing) existing.remove(); 
+        const msg = document.createElement('div');
+        msg.id = 'copy-warning-toast';
+        msg.innerHTML = '⚠️ चेतावनी: सामग्री कॉपी करना मना है! (अगली बार कॉपी हो जाएगा)'; 
+        document.body.appendChild(msg);
+        requestAnimationFrame(() => msg.classList.add('show-toast')); 
         setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 400);
+          msg.classList.remove('show-toast');  
+          setTimeout(() => msg.remove(), 400);
         }, 3000);
-    }
-});
-/* * 🚀 SURESH BISHNOI MASTER ENGINE (PART 6/6)
- * Includes: Live Search, Auto-TOC, Copy Warning, Visitor Counter
- */
+      };
 
-// 6. --- SURESH LIVE SEARCH ENGINE ---
-const sureshSearchInput = document.getElementById('suresh-live-search');
-const sureshResultsBox = document.getElementById('suresh-search-results');
-
-if (sureshSearchInput) {
-    let debounceTimer;
-    sureshSearchInput.addEventListener('keyup', function() {
-        clearTimeout(debounceTimer);
-        const query = this.value.trim();
-        
-        if (query.length < 3) {
-            sureshResultsBox.style.display = 'none';
-            return;
-        }
-        
-        sureshResultsBox.style.display = 'block';
-        sureshResultsBox.innerHTML =
-            '<div class="suresh-loading-search"><i class="fas fa-spinner fa-spin"></i> Searching...</div>';
-        
-        debounceTimer = setTimeout(() => {
-            fetch(
-                    `/feeds/posts/summary?alt=json&q=${encodeURIComponent(query)}&max-results=5`)
-                .then(response => response.json())
-                .then(data => {
-                    let html = '';
-                    if (data.feed.entry) {
-                        data.feed.entry.forEach(entry => {
-                            const title = entry
-                                .title.$t;
-                            const link = entry.link
-                                .find(l => l.rel ===
-                                    'alternate')
-                                .href;
-                            html +=
-                                `<a href="${link}" class="suresh-search-item">${title}</a>`;
-                        });
-                    } else {
-                        html =
-                            '<div class="suresh-no-result">No updates found.</div>';
-                    }
-                    sureshResultsBox.innerHTML = html;
-                });
-        }, 500);
-    });
-}
-
-// 7. --- SURESH AUTO TABLE OF CONTENTS (TOC) ---
-const sureshPostBody = document.querySelector('.suresh-post-body');
-const sureshTocContainer = document.getElementById('suresh-auto-toc');
-
-if (sureshPostBody && sureshTocContainer) {
-    const headings = sureshPostBody.querySelectorAll('h2, h3');
-    if (headings.length > 1) {
-        let tocHtml =
-            '<div class="suresh-toc-title">📜 Table of Contents <button id="suresh-toc-toggle">Hide</button></div><ul class="suresh-toc-list" id="suresh-toc-list">';
-        
-        headings.forEach((heading, index) => {
-            const id = `suresh-heading-${index}`;
-            heading.setAttribute('id', id);
-            tocHtml +=
-                `<li><a href="#${id}">${heading.innerText}</a></li>`;
+      /* --- 3. GOOGLE TRANSLATE & TEXT RESIZE --- */
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const lang = e.target.getAttribute('data-lang');
+          const select = document.querySelector('.goog-te-combo') || document.querySelector('#google_translate_element select');
+          if (select) {
+            select.value = lang;
+            select.dispatchEvent(new Event('change'));
+          }
         });
+      });
+
+      document.querySelectorAll('.resize-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const multiplier = parseInt(e.target.getAttribute('data-resize'));
+          let content = document.querySelector('.post-body') || document.body;
+          let currentSizeNum = parseFloat(window.getComputedStyle(content, null).getPropertyValue('font-size'));
+          if (!content.dataset.baseSize) content.dataset.baseSize = currentSizeNum;
+          let baseSize = parseFloat(content.dataset.baseSize);
+          
+          if (multiplier === 0) content.style.fontSize = `${baseSize}px`;
+          else if (multiplier === 1) content.style.fontSize = `${baseSize * 1.2}px`;
+          else if (multiplier === -1) content.style.fontSize = `${baseSize * 0.85}px`;
+        });
+      });
+
+      /* --- 4. DARK MODE TOGGLE --- */
+      const darkModeBtn = document.getElementById('darkModeToggle');
+      const themeText = document.getElementById('themeText');
+      const icon = document.querySelector('#darkModeToggle i');
+      
+      const applyDarkMode = (isDark) => {
+        if (isDark) {
+          document.body.classList.add("dark-mode");
+          if (themeText) themeText.innerText = "Light";
+          if (icon) icon.className = "fas fa-sun";
+        } else {
+          document.body.classList.remove("dark-mode");
+          if (themeText) themeText.innerText = "Dark";
+          if (icon) icon.className = "fas fa-moon";
+        }
+      };
+
+      if (localStorage.getItem("suresh_theme") === "dark") applyDarkMode(true);
+
+      if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', () => {
+          const isDark = document.body.classList.toggle("dark-mode");
+          localStorage.setItem("suresh_theme", isDark ? "dark" : "light");
+          applyDarkMode(isDark);
+        });
+      }
+
+      /* --- 5. MAGIC BADGE CONVERTER --- */
+      document.querySelectorAll('.dash-item-title, .main-post-title, .post-title, h3.post-title a, .gov-list-table td b, .post-body b').forEach(el => {
+        const text = el.innerHTML;
+        const match = text.match(/\[New(?:\|(\d{2}-\d{2}-\d{4}))?\]/i); 
+        if (match) {
+          const [fullMatch, dateStr] = match;
+          let showBadge = true;  
+          if (dateStr) {
+            const [day, month, year] = dateStr.split("-");
+            const expireDate = new Date(year, month - 1, day);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);  
+            if (today > expireDate) showBadge = false;
+          }
+          el.innerHTML = showBadge 
+            ? text.replace(fullMatch, '<span class="magic-new-badge">NEW</span>') 
+            : text.replace(fullMatch, "").trim();
+        }
+      });
+
+      /* --- 6. 3D SIDEBAR LOGIC --- */
+      const sb = document.getElementById("appSidebar");
+      const ov = document.getElementById("sidebarBackdrop");
+      const bd = document.body;
+
+      document.getElementById('menuToggleBtn')?.addEventListener('click', () => {
+        if (sb.classList.contains("mini")) sb.classList.remove("mini");
+        sb.classList.toggle("active");
+        ov.classList.toggle("active");
+        bd.classList.toggle("sidebar-open", sb.classList.contains("active"));
+      });
+
+      const closeSidebar = () => {
+        sb.classList.remove("active");
+        ov.classList.remove("active");
+        bd.classList.remove("sidebar-open");
+      };
+      document.getElementById('closeSidebarBtn')?.addEventListener('click', closeSidebar);
+      ov?.addEventListener('click', closeSidebar);
+
+      document.getElementById('toggleMiniBtn')?.addEventListener('click', () => {
+        sb.classList.toggle("mini");  
+        const isMini = sb.classList.contains("mini");
+        bd.classList.toggle("sidebar-open", !isMini);
+        ov.classList.toggle("active", !isMini);
+      });
+
+      document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
+        trigger.addEventListener('click', function() {
+          if (sb.classList.contains("mini")) {
+            document.getElementById('toggleMiniBtn').click();
+            return; 
+          }
+          this.classList.toggle("open");
+          const submenu = this.nextElementSibling;
+          if (submenu && submenu.style.maxHeight) {
+            submenu.style.maxHeight = null;
+          } else if (submenu) {
+            submenu.style.maxHeight = `${submenu.scrollHeight}px`;
+            let parent = this.parentElement.closest(".submenu-box");
+            while (parent) {
+              parent.style.maxHeight = `${parseInt(parent.style.maxHeight) + submenu.scrollHeight}px`;
+              parent = parent.parentElement.closest(".submenu-box");
+            }
+          }
+        });
+      });
+
+      /* --- 7. PRINT BUTTON --- */
+      document.getElementById('printPostBtn')?.addEventListener('click', () => window.print());
+
+      /* --- 8. SMART VERIFIED ADMIN BADGE --- */
+      document.querySelectorAll('cite.user, .comment-author').forEach(el => {
+        if (el.innerText.trim() === "Suresh Bishnoi") {
+          const innerLink = el.querySelector('a');
+          if (innerLink) innerLink.classList.add('is-admin-name');
+          else el.classList.add('is-admin-name');
+          const dateEl = el.parentNode.querySelector('.comment-timestamp');
+          if (dateEl) dateEl.style.color = "#999";
+        }
+      });
+
+      /* --- 9. DOUBLE BACK PRESS TO EXIT --- */
+      let backPressedCount = 0;
+      let initialHash = window.location.hash;
+      history.pushState(null, null, location.href);
+      
+      window.addEventListener('popstate', () => {
+        if (window.location.hash !== initialHash) {
+          initialHash = window.location.hash;
+          return;
+        }
+        if (backPressedCount === 0) {
+          history.pushState(null, null, location.href);
+          const toast = document.createElement('div');
+          toast.id = 'pro-exit-toast';
+          toast.innerText = "Press back again to exit";
+          document.body.appendChild(toast);
+          requestAnimationFrame(() => toast.style.opacity = '1');  
+          backPressedCount++;
+          setTimeout(() => {
+            if (toast) {
+              toast.style.opacity = '0';
+              setTimeout(() => toast.remove(), 300);
+            }
+            backPressedCount = 0;
+          }, 2500);
+        } else {
+          history.back();
+        }
+      });
+
+      /* --- 10. SCROLL PROGRESS & TO-TOP --- */
+      const progressPath = document.querySelector('.progress-wrap path');
+      if (progressPath) {
+        const pathLength = progressPath.getTotalLength();
+        progressPath.style.transition = 'none';
+        progressPath.style.strokeDasharray = `${pathLength} ${pathLength}`;
+        progressPath.style.strokeDashoffset = pathLength;
+        progressPath.getBoundingClientRect();
+        progressPath.style.transition = 'stroke-dashoffset 10ms linear';
         
-        tocHtml += '</ul>';
-        sureshTocContainer.innerHTML = tocHtml;
+        const updateProgress = () => {
+          const scroll = window.scrollY || window.pageYOffset;
+          const height = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = pathLength - (scroll * pathLength / height);
+          progressPath.style.strokeDashoffset = progress;
+          
+          const myBar = document.getElementById("myBar");
+          if (myBar) myBar.style.width = `${(scroll / height) * 100}%`;
+          
+          const progWrap = document.querySelector('.progress-wrap');
+          if (progWrap) progWrap.classList.toggle('active-progress', scroll > 50);
+        };
+        updateProgress();
+        window.addEventListener('scroll', updateProgress);
+      }
+
+      document.getElementById('scrollToTopBtn')?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* --- 11. LIVE SEARCH BOX --- */
+      const searchInput = document.querySelector('input[name="q"], #sidebar-search-input');
+      if (searchInput) {
+        const searchForm = searchInput.closest('form');
+        const resultsBox = document.createElement('div');
+        resultsBox.id = 'live-search-container';
+        searchForm.parentElement.style.position = 'relative';
+        searchForm.parentElement.appendChild(resultsBox);
         
-        document.getElementById('suresh-toc-toggle').addEventListener('click',
-            function() {
-                const list = document.getElementById('suresh-toc-list');
-                if (list.style.display === 'none') {
-                    list.style.display = 'block';
-                    this.innerText = 'Hide';
+        let typeTimer;
+        searchInput.addEventListener('keyup', function() {
+          clearTimeout(typeTimer);
+          const query = this.value.trim();
+          if (query.length < 2) {
+            resultsBox.style.display = 'none';
+            return;
+          } 
+          resultsBox.style.display = 'block';
+          resultsBox.innerHTML = `<div class="search-loading"><i class="fas fa-circle-notch"></i> Searching for "${query}"...</div>`;
+          
+          typeTimer = setTimeout(() => {
+            fetch(`/feeds/posts/summary?alt=json&q=${encodeURIComponent(query)}&max-results=5`)
+              .then(res => res.json())
+              .then(data => {
+                let htmlCode = ''; 
+                if (data.feed.entry) {
+                  data.feed.entry.forEach(entry => {
+                    const postTitle = entry.title.$t;
+                    const postLink = entry.link.find(l => l.rel === 'alternate')?.href || '#';
+                    const postThumb = entry.media$thumbnail ? entry.media$thumbnail.url.replace('/s72-c/', '/s100-c/') : 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhJtxThUi_030GFwewFxWuYdPoTJyMuOTBYvNpw_Y6wz0Z6y2rLNBQ5GUvI_xHptxIUewAs2S0X5cXp_7lc7RoIUu5D-dTzM9gnBPblQSy5P1h-lb4LC32GA0MrhqDX2m-qc8cVJfoWe422IL6f8IqpjI_lt-ONBa__Vwt6nNfEtbpSwq_wCvBau2eHVOBk/w180-h80-rw/57853.png';
+                    htmlCode += `<a href="${postLink}" class="search-result-item"><img src="${postThumb}" class="search-result-thumb"><div class="search-result-title">${postTitle}</div></a>`;
+                  });
                 } else {
-                    list.style.display = 'none';
-                    this.innerText = 'Show';
+                  htmlCode = `<div class="search-no-result">No results found for "${query}"</div>`;
                 }
-            });
-    }
-}
+                resultsBox.innerHTML = htmlCode;
+              }).catch(() => resultsBox.innerHTML = `<div class="search-no-result">Error loading results.</div>`);
+          }, 500);
+        }); 
+        document.addEventListener('click', (e) => {
+          if (!searchForm.contains(e.target)) resultsBox.style.display = 'none';
+        });
+      }
 
-// 8. --- CONTENT PROTECTION (COPY WARNING) ---
-let sureshCopyAlerted = false;
-document.addEventListener('copy', (e) => {
-    if (!sureshCopyAlerted) {
-        // First time warning
-        const toast = document.getElementById('suresh-copy-toast');
-        toast.innerText = "⚠️ चेतावनी: सामग्री कॉपी करना मना है!";
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-        sureshCopyAlerted = true;
-        // Don't prevent default on first try if you want to allow it once, 
-        // OR e.preventDefault() to block completely.
-    }
-});
+      /* --- 12. AUTO TOC & READING TIME --- */
+      const postBody = document.querySelector('.post-body');
+      if (postBody) {
+        // TOC
+        const headings = postBody.querySelectorAll('h2, h3, h4');
+        if (headings.length >= 2) {
+          const tocContainer = document.createElement('div');
+          tocContainer.id = 'auto-toc';
+          tocContainer.innerHTML = '<div class="toc-title">Table of Contents <button id="tocToggleBtn">[Hide]</button></div><ol id="toc-list"></ol>';
+          const tocList = tocContainer.querySelector('#toc-list');
+          
+          headings.forEach((heading, index) => {
+            const anchorId = `toc-point-${index}`;
+            heading.id = anchorId; 
+            const li = document.createElement('li');
+            li.className = heading.tagName.toLowerCase(); 
+            li.innerHTML = `<a href="#${anchorId}">${heading.innerText}</a>`;
+            tocList.appendChild(li);
+          });
+          headings[0].parentNode.insertBefore(tocContainer, headings[0]);
+          
+          document.getElementById('tocToggleBtn').addEventListener('click', function() {
+            if (tocList.style.display === 'none') {
+              tocList.style.display = 'block';
+              this.innerText = '[Hide]';
+            } else {
+              tocList.style.display = 'none';
+              this.innerText = '[Show]';
+            }
+          });
+        }
+        // Reading Time
+        const wordCount = postBody.innerText.trim().split(/\s+/).length;
+        const time = Math.max(1, Math.ceil(wordCount / 200));
+        const timeCountTag = document.getElementById('readTimeCount');
+        if (timeCountTag) timeCountTag.innerText = `${time} min read`;
+      } else {
+        const infoStrip = document.querySelector('.gov-info-strip');
+        if (infoStrip) infoStrip.style.display = 'none';
+      }
 
-// 9. --- VISITOR COUNTER & UPDATE TIME ---
-const sureshUpdateTag = document.getElementById('suresh-update-time');
-if (sureshUpdateTag) {
-    const now = new Date();
-    sureshUpdateTag.innerText = now.toLocaleDateString(
-        'en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ", " +
-        now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-}
+      /* --- 13. DISABLE DEV TOOLS --- */
+      document.onkeydown = (e) => {
+        if (e.keyCode === 123 || 
+           (e.ctrlKey && e.keyCode === 85) || // Ctrl+U
+           (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+           (e.ctrlKey && e.shiftKey && e.keyCode === 74)) { // Ctrl+Shift+J
+          return false;
+        }
+      };
 
-const sureshCounterTag = document.getElementById('suresh-visitor-count');
-if (sureshCounterTag) {
-    fetch("https://api.counterapi.dev/v1/suresh-jani-bishnoi/main-site/up")
-        .then(res => res.json())
-        .then(data => { sureshCounterTag.innerText = data.count; })
-        .catch(() => { sureshCounterTag.innerText = "1000+"; });
-}
+      /* --- 14. COMMENTS ACCESSIBILITY FIX --- */
+      const jadSeFix = () => {
+        document.querySelectorAll('.comment-thread ol > div').forEach(div => {
+          const li = document.createElement('li');
+          li.style.listStyle = 'none';
+          div.parentNode.insertBefore(li, div);
+          li.appendChild(div);
+        });
+        document.querySelectorAll('li').forEach(li => {
+          if (li.parentElement) {
+            const parentTag = li.parentElement.tagName.toLowerCase();
+            if (!['ul', 'ol', 'menu'].includes(parentTag)) {
+              const ol = document.createElement('ol');
+              ol.style.listStyle = 'none';
+              ol.style.padding = '0';
+              ol.style.margin = '0';
+              li.parentNode.insertBefore(ol, li);
+              ol.appendChild(li);
+            }
+          }
+        });
+        document.querySelectorAll('.comment-reply, .thread-collapsed a, .thread-expanded a, .item-control a, .comments-outer-box a:not([href])').forEach(link => {
+          if (!link.hasAttribute('href') || link.getAttribute('href') === '' || link.getAttribute('href').includes('javascript')) {
+            link.setAttribute('href', '#comment-editor');
+          }
+          link.setAttribute('role', 'button');
+          link.setAttribute('rel', 'nofollow');
+        });
+      };
+      jadSeFix();
+      const targetNode = document.getElementById('comment-holder');
+      if (targetNode) new MutationObserver(jadSeFix).observe(targetNode, { childList: true, subtree: true });
 
-console.log("🔥 Suresh Bishnoi Master Engine 7.0 Loaded Successfully!");
-// 10. --- SURESH ANTI-THEFT & PRINT LOGIC ---
-document.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    alert("⚠️ Right Click is Disabled on Suresh Bishnoi Hub!");
-});
-
-document.onkeydown = (e) => {
-    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'
-            .charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) || (e
-            .ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
-        alert("🚀 Security Alert: Developer Tools are restricted!");
-        return false;
-    }
-};
-
-const printPost = () => {
-    window.print();
-};
-// 11. --- SURESH PRELOADER & HOME FEED ---
-window.addEventListener('load', () => {
-    const preloader = document.getElementById('suresh-preloader');
-    if(preloader) {
-        preloader.style.opacity = '0';
-        setTimeout(() => preloader.style.display = 'none', 500);
-    }
-
-    // Home Feed Dashboard Fetch
-    const feedContainer = document.getElementById('suresh-feed-posts');
-    if(feedContainer) {
-        fetch('/feeds/posts/summary?alt=json&max-results=5')
-            .then(res => res.json())
-            .then(data => {
-                let html = '';
-                data.feed.entry.forEach(entry => {
-                    const title = entry.title.$t;
-                    const link = entry.link.find(l => l.rel === 'alternate').href;
-                    html += `<div class="suresh-dash-item"><a href="${link}">${title}</a></div>`;
-                });
-                feedContainer.innerHTML = html;
-            });
-    }
-});
-
-// 12. --- TRANSLATION SWITCH LOGIC ---
-const translate = (lang) => {
-    const select = document.querySelector('.goog-te-combo');
-    if (select) {
-        select.value = lang;
-        select.dispatchEvent(new Event('change'));
-    }
-};
-document.getElementById('suresh-lang-hi')?.addEventListener('click', () => translate('hi'));
-document.getElementById('suresh-lang-en')?.addEventListener('click', () => translate('en'));
-// 13. --- SURESH MOBILE DRAWER LOGIC ---
-const sureshMenuBtn = document.querySelector('.suresh-menu-trigger');
-const sureshDrawer = document.querySelector('.suresh-mobile-menu');
-const sureshOverlay = document.querySelector('.suresh-overlay');
-
-if(sureshMenuBtn) {
-    sureshMenuBtn.addEventListener('click', () => {
-        sureshDrawer.classList.add('active');
-        sureshOverlay.classList.add('active');
     });
-}
 
-if(sureshOverlay) {
-    sureshOverlay.addEventListener('click', () => {
-        sureshDrawer.classList.remove('active');
-        sureshOverlay.classList.remove('active');
-    });
-}
+    /* --- 15. JSON FEED FUNCTIONS (Global Scope required for Blogger Callbacks) --- */
+    window.loadProfessionalPosts = (json) => {
+      const posts = json.feed.entry;
+      const proList = document.getElementById("pro-post-list");
+      if (!proList || !posts) return;
+      
+      let html = ""; 
+      posts.forEach(post => {
+        const title = post.title.$t;
+        const [year, month, day] = post.published.$t.substring(0, 10).split("-");
+        const link = post.link.find(l => l.rel === "alternate")?.href || '#';
+        html += `<div class="dash-item"><div class="dash-item-date">${day}-${month}-${year}</div><a class="dash-item-title" href="${link}">${title}</a></div>`;
+      });
+      proList.innerHTML = html;
+    };
 
-// 14. --- LAZY LOADING IMAGES (Speed Scan Fix) ---
-document.querySelectorAll('img').forEach(img => {
-    img.setAttribute('loading', 'lazy');
-});
+    window.loadSarkariTable = (json) => {
+      const entries = json.feed.entry;
+      const tbody = document.getElementById('gov-live-table');
+      if (!tbody) return;
+      if (!entries || entries.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No Updates Found</td></tr>";
+        return;
+      }
+      let html = '';
+      entries.forEach((entry, i) => {
+        let title = entry.title.$t;
+        const [year, month, day] = entry.published.$t.substring(0, 10).split('-');
+        const link = entry.link.find(l => l.rel === "alternate")?.href || '#';
+        if (title.includes('[New]')) title = title.replace('[New]', '<span class="magic-new-badge">NEW</span>');
+        
+        html += `<tr><td style="text-align:center;">${i + 1}</td><td style="white-space:nowrap;">${day}-${month}-${year}</td><td><b>${title}</b></td><td style="text-align:center;"><a class="btn-view-details" href="${link}">View Details</a></td></tr>`;
+      });
+      tbody.innerHTML = html;
+    };
+
+    window.loadRelatedPosts = (json) => {
+      const relContainer = document.getElementById("custom-related-posts");
+      if (!relContainer) return;
+      const posts = json.feed.entry;
+      let html = "";
+      const defaultImg = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhJtxThUi_030GFwewFxWuYdPoTJyMuOTBYvNpw_Y6wz0Z6y2rLNBQ5GUvI_xHptxIUewAs2S0X5cXp_7lc7RoIUu5D-dTzM9gnBPblQSy5P1h-lb4LC32GA0MrhqDX2m-qc8cVJfoWe422IL6f8IqpjI_lt-ONBa__Vwt6nNfEtbpSwq_wCvBau2eHVOBk/w180-h80-rw/57853.png";
+      
+      if (posts && posts.length > 0) {
+        posts.slice(0, 3).forEach(post => {
+          const title = post.title.$t;
+          const link = post.link.find(l => l.rel === "alternate")?.href || '#';
+          const imgUrl = post.media$thumbnail ? post.media$thumbnail.url.replace("/s72-c/", "/s400/") : defaultImg;
+          html += `<a href="${link}" class="rel-post-item"><img src="${imgUrl}" class="rel-thumb" alt="Thumb"/><span class="rel-title">${title}</span></a>`;
+        });
+      } else {
+        html = '<p style="padding:10px; color:#666;">कोई और अपडेट नहीं मिली।</p>';
+      }
+      relContainer.innerHTML = html;
+    };
+    //]]>
+  </script>
+
+  <script defer='defer' src='/feeds/posts/summary?alt=json-in-script&amp;max-results=10&amp;callback=loadProfessionalPosts'></script>
+  <script defer='defer' src='/feeds/posts/summary?alt=json-in-script&amp;callback=loadSarkariTable&amp;max-results=100'></script>
+  
+  <b:if cond='data:view.isPost'>
+    <b:if cond='data:post.labels'>
+      <b:loop index='i' values='data:post.labels' var='label'>
+        <b:if cond='data:i == 0'>
+          <script defer='defer' expr:src='&quot;/feeds/posts/summary/-/&quot; + data:label.name + &quot;?alt=json-in-script&amp;callback=loadRelatedPosts&amp;max-results=4&quot;' type='text/javascript'/>
+        </b:if>
+      </b:loop>
+    </b:if>
+  </b:if>
+
+  <div class='hidden-translate-box' id='google_translate_element'/>
+  <script type='text/javascript'>
+    //<![CDATA[
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'hi,en', autoDisplay: false }, 'google_translate_element');
+    }
+    //]]>
+  </script>
+  <script defer='defer' src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit' type='text/javascript'></script>
+
